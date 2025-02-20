@@ -20,6 +20,7 @@ export default function StartupForm() {
     resolver: zodResolver(insertStartupSchema),
     defaultValues: {
       organizationName: "",
+      url: "",
       industries: [],
       location: "",
       fundingRounds: null,
@@ -118,6 +119,25 @@ export default function StartupForm() {
                   )}
                 />
 
+                <FormField
+                  control={form.control}
+                  name="url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Website URL</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="url"
+                          placeholder="https://"
+                          {...field}
+                          value={field.value ?? ""}
+                          className="bg-gray-900 border-gray-700"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
@@ -157,7 +177,6 @@ export default function StartupForm() {
                     )}
                   />
                 </div>
-
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}

@@ -12,6 +12,7 @@ export const startups = pgTable("startups", {
   id: serial("id").primaryKey(),
   submissionKey: text("submission_key").notNull().unique(),
   organizationName: text("organization_name"),
+  url: text("url"),
   industries: jsonb("industries").$type<string[]>(),
   location: text("location"),
   fundingRounds: integer("funding_rounds"),
@@ -56,6 +57,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export const insertStartupSchema = createInsertSchema(startups).pick({
   organizationName: true,
+  url: true,
   industries: true,
   location: true,
   fundingRounds: true,
