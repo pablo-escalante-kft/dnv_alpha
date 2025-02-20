@@ -28,6 +28,29 @@ export const startups = pgTable("startups", {
   growth: decimal("growth"),
   valuation: decimal("valuation"),
   lastValuationDate: timestamp("last_valuation_date"),
+  founders: jsonb("founders").$type<{
+    name: string;
+    role: string;
+    linkedIn?: string;
+    education?: string;
+    experience?: string;
+    previousCompanies?: string[];
+    bio?: string;
+    achievements?: string[];
+  }[]>(),
+  monthlyMetrics: jsonb("monthly_metrics").$type<{
+    date: string;
+    revenue?: number;
+    users?: number;
+    growth?: number;
+    burn?: number;
+  }[]>(),
+  keyMetrics: jsonb("key_metrics").$type<{
+    metric: string;
+    value: number;
+    change: number;
+    timeframe: string;
+  }[]>(),
   aiAnalysis: jsonb("ai_analysis").$type<{
     scores: {
       marketPotential: number;
@@ -45,6 +68,12 @@ export const startups = pgTable("startups", {
     recommendations: string[];
     riskLevel: "low" | "medium" | "high";
     investmentPotential: "strong" | "moderate" | "weak";
+    founderAssessment?: {
+      leadership: number;
+      experience: number;
+      domainExpertise: number;
+      trackRecord: number;
+    };
   } | null>(),
   createdAt: timestamp("created_at").defaultNow(),
   status: text("status").default("pending"),
@@ -73,6 +102,9 @@ export const insertStartupSchema = createInsertSchema(startups).pick({
   growth: true,
   valuation: true,
   lastValuationDate: true,
+  founders: true,
+  monthlyMetrics: true,
+  keyMetrics: true,
   aiAnalysis: true,
 });
 

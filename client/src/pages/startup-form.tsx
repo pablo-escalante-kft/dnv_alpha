@@ -36,6 +36,7 @@ export default function StartupForm() {
       growth: null,
       valuation: null,
       lastValuationDate: null,
+      founders: [], // Added founders field
     },
   });
 
@@ -384,6 +385,129 @@ export default function StartupForm() {
                           placeholder="Enter investors, separated by commas (max 5)"
                           className="bg-gray-900 border-gray-700"
                         />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="founders"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Founders Information</FormLabel>
+                      <FormControl>
+                        <div className="space-y-4">
+                          {Array.from({ length: field.value?.length || 1 }).map((_, index) => (
+                            <Card key={index} className="bg-gray-900 border-gray-700">
+                              <CardContent className="pt-6 space-y-4">
+                                <Input
+                                  placeholder="Name"
+                                  value={field.value?.[index]?.name || ""}
+                                  onChange={(e) => {
+                                    const newFounders = [...(field.value || [])];
+                                    newFounders[index] = {
+                                      ...(newFounders[index] || {}),
+                                      name: e.target.value,
+                                    };
+                                    field.onChange(newFounders);
+                                  }}
+                                  className="bg-gray-800 border-gray-700"
+                                />
+                                <Input
+                                  placeholder="Role"
+                                  value={field.value?.[index]?.role || ""}
+                                  onChange={(e) => {
+                                    const newFounders = [...(field.value || [])];
+                                    newFounders[index] = {
+                                      ...(newFounders[index] || {}),
+                                      role: e.target.value,
+                                    };
+                                    field.onChange(newFounders);
+                                  }}
+                                  className="bg-gray-800 border-gray-700"
+                                />
+                                <Input
+                                  placeholder="LinkedIn URL"
+                                  value={field.value?.[index]?.linkedIn || ""}
+                                  onChange={(e) => {
+                                    const newFounders = [...(field.value || [])];
+                                    newFounders[index] = {
+                                      ...(newFounders[index] || {}),
+                                      linkedIn: e.target.value,
+                                    };
+                                    field.onChange(newFounders);
+                                  }}
+                                  className="bg-gray-800 border-gray-700"
+                                />
+                                <Input
+                                  placeholder="Education"
+                                  value={field.value?.[index]?.education || ""}
+                                  onChange={(e) => {
+                                    const newFounders = [...(field.value || [])];
+                                    newFounders[index] = {
+                                      ...(newFounders[index] || {}),
+                                      education: e.target.value,
+                                    };
+                                    field.onChange(newFounders);
+                                  }}
+                                  className="bg-gray-800 border-gray-700"
+                                />
+                                <Input
+                                  placeholder="Experience"
+                                  value={field.value?.[index]?.experience || ""}
+                                  onChange={(e) => {
+                                    const newFounders = [...(field.value || [])];
+                                    newFounders[index] = {
+                                      ...(newFounders[index] || {}),
+                                      experience: e.target.value,
+                                    };
+                                    field.onChange(newFounders);
+                                  }}
+                                  className="bg-gray-800 border-gray-700"
+                                />
+                                <Input
+                                  placeholder="Previous Companies (comma-separated)"
+                                  value={field.value?.[index]?.previousCompanies?.join(", ") || ""}
+                                  onChange={(e) => {
+                                    const newFounders = [...(field.value || [])];
+                                    newFounders[index] = {
+                                      ...(newFounders[index] || {}),
+                                      previousCompanies: e.target.value.split(", ").filter(Boolean),
+                                    };
+                                    field.onChange(newFounders);
+                                  }}
+                                  className="bg-gray-800 border-gray-700"
+                                />
+                                <Input
+                                  placeholder="Achievements (comma-separated)"
+                                  value={field.value?.[index]?.achievements?.join(", ") || ""}
+                                  onChange={(e) => {
+                                    const newFounders = [...(field.value || [])];
+                                    newFounders[index] = {
+                                      ...(newFounders[index] || {}),
+                                      achievements: e.target.value.split(", ").filter(Boolean),
+                                    };
+                                    field.onChange(newFounders);
+                                  }}
+                                  className="bg-gray-800 border-gray-700"
+                                />
+                              </CardContent>
+                            </Card>
+                          ))}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => {
+                              const newFounders = [...(field.value || []), {}];
+                              field.onChange(newFounders);
+                            }}
+                            className="w-full"
+                          >
+                            Add Founder
+                          </Button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
