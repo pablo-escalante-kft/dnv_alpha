@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Startup } from "@shared/schema";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Loader2, Plus } from "lucide-react";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
+  const [, setLocation] = useLocation();
 
   const { data: startups, isLoading } = useQuery<Startup[]>({
     queryKey: ["/api/startups"],
@@ -19,8 +20,9 @@ export default function HomePage() {
       const res = await apiRequest("POST", "/api/startups/create");
       return await res.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["/api/startups"] });
+      setLocation(`/submit/${data.key}`);
     },
   });
 
@@ -61,16 +63,16 @@ export default function HomePage() {
                 <Card className="bg-gray-800 border-gray-700 hover:border-primary cursor-pointer transition-colors">
                   <CardHeader>
                     <CardTitle className="text-white">
-                      {startup.name || "New Submission"}
+                      {startup.organizationName || "New Submission"}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-sm text-gray-400">
                       Status: {startup.status}
                     </div>
-                    {startup.industry && (
+                    {startup.industries && startup.industries.length > 0 && (
                       <div className="text-sm text-gray-400">
-                        Industry: {startup.industry}
+                        Industries: {startup.industries.join(", ")}
                       </div>
                     )}
                     <div className="text-sm text-gray-400">
