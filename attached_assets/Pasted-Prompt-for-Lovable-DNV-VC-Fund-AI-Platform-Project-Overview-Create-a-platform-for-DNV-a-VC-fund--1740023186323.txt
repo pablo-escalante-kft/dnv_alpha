@@ -1,0 +1,74 @@
+Prompt for Lovable: DNV VC Fund AI Platform
+
+Project Overview
+
+Create a platform for DNV, a VC fund that leverages AI to analyze startups and assess their potential. The platform should streamline startup evaluation through a structured input system, AI-powered analysis, and an interactive, shareable dashboard.
+
+The design should feature a black theme with dark gradients from charcoal to deep gray for a sleek and modern look.
+
+Core Features & Components
+
+1. Admin Portal (Fund Manager Dashboard)
+	•	User Authentication: Secure login for fund administrators.
+	•	Startup Registry Management: Ability to create and manage startup profiles.
+	•	Generate Submission Links: Each registered startup receives a unique URL to upload required inputs.
+	•	Processing Pipeline: Once submitted, data is processed and analyzed by OpenAI.
+
+2. Startup Submission Portal
+
+Each startup receives a custom-generated link where they can upload essential details:
+	•	Company Information
+	•	Startup Name
+	•	Industry
+	•	Founding Year
+	•	Location
+	•	Number of Employees
+	•	Founder(s) and Team Details
+	•	Business Model & Financials
+	•	Problem Statement & Solution
+	•	Revenue Model
+	•	Traction (Users, Revenue, Growth Metrics)
+	•	Funding History (Previous Rounds, Investors)
+	•	Financial Projections
+	•	Market & Competition
+	•	Market Size & Opportunity
+	•	Competitor Analysis
+	•	Unique Selling Proposition
+	•	Technical & Product Details
+	•	Product Overview (MVP, Full Product, Roadmap)
+	•	Technology Stack
+	•	IP/Patents
+	•	Documents Upload
+	•	Pitch Deck (PDF)
+	•	Financial Statements
+	•	Cap Table
+	•	Business Plan
+
+3. AI-Driven Startup Analysis
+	•	Integration with OpenAI to generate insights based on uploaded data.
+	•	Key Metrics Analysis:
+	•	Market potential
+	•	Competitive positioning
+	•	Financial viability
+	•	Scalability potential
+	•	Risk assessment
+	•	AI-generated investment summary and risk profile.
+
+4. Animated Dashboard & Shareable Reports
+	•	Data Visualization: Charts, graphs, and key insights displayed interactively.
+	•	Customizable Reports: Investors can filter and export reports.
+	•	Sharable URL: Generate a public link for external investors to view the startup’s analysis.
+
+Design & User Experience Considerations
+	•	Dark UI with gradients from charcoal to deep gray for a premium, modern aesthetic.
+	•	Smooth animations to enhance user interactions.
+	•	Responsive design for web and mobile accessibility.
+	•	Fast & intuitive user experience.
+
+Tech Stack Considerations
+	•	Frontend: React.js with Tailwind
+	•	Backend: Supabase for authentication and database
+	•	AI Processing: OpenAI API integration
+	•	File Storage: Cloud-based (Supabase storage or AWS S3)
+
+This prompt ensures clarity for Lovable, guiding the platform’s development with precise details. Let me know if you need any refinements! 🚀
