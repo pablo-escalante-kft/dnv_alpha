@@ -29,22 +29,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     data: user,
     error,
     isLoading,
-  } = useQuery<SelectUser | undefined, Error>({
+  } = useQuery<SelectUser | null, Error>({
     queryKey: ["/api/user"],
     queryFn: async () => {
       try {
         const user = await getUser();
-        return user || undefined;
+        return user || null;
       } catch (error) {
-        return undefined;
+        return null;
       }
     },
   });
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const user = await signIn(credentials.username, credentials.password);
-      return user;
+      const { user: authUser } = await signIn(credentials.username, credentials.password);
+      if (!authUser) throw new Error("Login failed");
+
+      const userData = await getUser();
+      if (!userData) throw new Error("Failed to get user data");
+
+      return userData;
     },
     onSuccess: (user: SelectUser) => {
       queryClient.setQueryData(["/api/user"], user);
@@ -65,6 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const registerMutation = useMutation({
     mutationFn: async (credentials: InsertUser) => {
       const user = await createUser(credentials.username, credentials.password);
+      if (!user) throw new Error("Registration failed");
       return user;
     },
     onSuccess: (user: SelectUser) => {

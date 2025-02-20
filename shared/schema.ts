@@ -2,12 +2,15 @@ import { pgTable, text, serial, integer, jsonb, timestamp, decimal } from "drizz
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Users table aligned with Supabase structure
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: text("id").primaryKey(), // UUID from Supabase Auth
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Rest of the schema remains unchanged
 export const startups = pgTable("startups", {
   id: serial("id").primaryKey(),
   submissionKey: text("submission_key").notNull().unique(),
@@ -84,31 +87,14 @@ export const insertUserSchema = createInsertSchema(users).pick({
   password: true,
 });
 
-export const insertStartupSchema = createInsertSchema(startups).pick({
-  organizationName: true,
-  url: true,
-  industries: true,
-  location: true,
-  fundingRounds: true,
-  lastFunding: true,
-  lastFundingType: true,
-  equity: true,
-  totalFunding: true,
-  revenue: true,
-  industryGroups: true,
-  foundersCount: true,
-  employeesCount: true,
-  topInvestors: true,
-  growth: true,
-  valuation: true,
-  lastValuationDate: true,
-  founders: true,
-  monthlyMetrics: true,
-  keyMetrics: true,
-  aiAnalysis: true,
+export const insertStartupSchema = createInsertSchema(startups).omit({
+  id: true,
+  createdAt: true,
+  submissionKey: true,
+  status: true,
 });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Startup = typeof startups.$inferSelect;
 export type InsertStartup = z.infer<typeof insertStartupSchema>;

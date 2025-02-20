@@ -6,13 +6,17 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Database functions
-export async function getUser(id: string) {
+export async function getUser() {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return undefined;
+
   const { data, error } = await supabase
     .from('users')
     .select('*')
-    .eq('id', id)
+    .eq('id', user.id)
     .single();
-  
+
   if (error) throw error;
   return data;
 }
@@ -22,9 +26,9 @@ export async function createUser(username: string, password: string) {
     email: username, // Using username as email for simplicity
     password: password
   });
-  
+
   if (authError) throw authError;
-  
+
   // Create user profile in users table
   const { data, error } = await supabase
     .from('users')
@@ -36,7 +40,7 @@ export async function createUser(username: string, password: string) {
     ])
     .select()
     .single();
-  
+
   if (error) throw error;
   return data;
 }
@@ -46,7 +50,7 @@ export async function signIn(username: string, password: string) {
     email: username,
     password: password
   });
-  
+
   if (error) throw error;
   return data;
 }
@@ -60,7 +64,7 @@ export async function getStartups() {
   const { data, error } = await supabase
     .from('startups')
     .select('*');
-  
+
   if (error) throw error;
   return data;
 }
@@ -71,7 +75,7 @@ export async function getStartupByKey(key: string) {
     .select('*')
     .eq('submission_key', key)
     .single();
-  
+
   if (error) throw error;
   return data;
 }
@@ -82,7 +86,7 @@ export async function createStartupSubmission() {
     .insert([{ status: 'pending' }])
     .select()
     .single();
-  
+
   if (error) throw error;
   return data;
 }
@@ -94,7 +98,7 @@ export async function updateStartup(key: string, data: any) {
     .eq('submission_key', key)
     .select()
     .single();
-  
+
   if (error) throw error;
   return updatedData;
 }
