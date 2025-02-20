@@ -6,7 +6,6 @@ import { insertStartupSchema, type InsertStartup, type Startup } from "@shared/s
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
@@ -20,24 +19,22 @@ export default function StartupForm() {
   const form = useForm<InsertStartup>({
     resolver: zodResolver(insertStartupSchema),
     defaultValues: {
-      name: "",
-      industry: "",
-      foundingYear: undefined,
+      organizationName: "",
+      industries: [],
       location: "",
-      employeeCount: undefined,
-      teamDetails: [],
-      businessModel: "",
-      problemStatement: "",
-      revenueModel: "",
-      traction: {},
-      fundingHistory: [],
-      financialProjections: {},
-      marketSize: "",
-      competitorAnalysis: [],
-      uniqueSellingProposition: "",
-      productOverview: "",
-      technologyStack: [],
-      intellectualProperty: [],
+      fundingRounds: null,
+      lastFunding: null,
+      lastFundingType: "",
+      equity: null,
+      totalFunding: null,
+      revenue: null,
+      industryGroups: [],
+      foundersCount: null,
+      employeesCount: null,
+      topInvestors: [],
+      growth: null,
+      valuation: null,
+      lastValuationDate: null,
     },
   });
 
@@ -105,28 +102,10 @@ export default function StartupForm() {
               >
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="organizationName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Company Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          value={field.value ?? ""}
-                          className="bg-gray-900 border-gray-700"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="industry"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Industry</FormLabel>
+                      <FormLabel>Organization Name</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -142,10 +121,50 @@ export default function StartupForm() {
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
-                    name="foundingYear"
+                    name="industries"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Founding Year</FormLabel>
+                        <FormLabel>Industries</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            value={field.value?.join(", ") ?? ""}
+                            onChange={(e) => field.onChange(e.target.value.split(", ").filter(Boolean))}
+                            placeholder="Enter industries, separated by commas"
+                            className="bg-gray-900 border-gray-700"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="location"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Location</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            value={field.value ?? ""}
+                            className="bg-gray-900 border-gray-700"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="fundingRounds"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Funding Rounds</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
@@ -162,7 +181,155 @@ export default function StartupForm() {
 
                   <FormField
                     control={form.control}
-                    name="employeeCount"
+                    name="lastFundingType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Funding Type</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            value={field.value ?? ""}
+                            className="bg-gray-900 border-gray-700"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-3 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="lastFunding"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Funding ($)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                            className="bg-gray-900 border-gray-700"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="equity"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Equity (%)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                            className="bg-gray-900 border-gray-700"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="totalFunding"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Total Funding ($)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                            className="bg-gray-900 border-gray-700"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="revenue"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Revenue ($)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                            className="bg-gray-900 border-gray-700"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="industryGroups"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Industry Groups</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            value={field.value?.join(", ") ?? ""}
+                            onChange={(e) => field.onChange(e.target.value.split(", ").filter(Boolean))}
+                            placeholder="Enter groups, separated by commas"
+                            className="bg-gray-900 border-gray-700"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="foundersCount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Number of Founders</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : null)}
+                            className="bg-gray-900 border-gray-700"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="employeesCount"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Number of Employees</FormLabel>
@@ -183,16 +350,20 @@ export default function StartupForm() {
 
                 <FormField
                   control={form.control}
-                  name="problemStatement"
+                  name="topInvestors"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Problem Statement</FormLabel>
+                      <FormLabel>Top 5 Investors</FormLabel>
                       <FormControl>
-                        <Textarea
+                        <Input
                           {...field}
-                          value={field.value ?? ""}
+                          value={field.value?.join(", ") ?? ""}
+                          onChange={(e) => {
+                            const investors = e.target.value.split(", ").filter(Boolean);
+                            field.onChange(investors.slice(0, 5));
+                          }}
+                          placeholder="Enter investors, separated by commas (max 5)"
                           className="bg-gray-900 border-gray-700"
-                          rows={4}
                         />
                       </FormControl>
                       <FormMessage />
@@ -200,43 +371,69 @@ export default function StartupForm() {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="businessModel"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Business Model</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          {...field}
-                          value={field.value ?? ""}
-                          className="bg-gray-900 border-gray-700"
-                          rows={4}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-3 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="growth"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Growth (%)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                            className="bg-gray-900 border-gray-700"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name="marketSize"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Market Size & Opportunity</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          {...field}
-                          value={field.value ?? ""}
-                          className="bg-gray-900 border-gray-700"
-                          rows={4}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="valuation"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Valuation ($)</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            {...field}
+                            value={field.value ?? ""}
+                            onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : null)}
+                            className="bg-gray-900 border-gray-700"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="lastValuationDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Valuation Date</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="date"
+                            {...field}
+                            value={field.value ? new Date(field.value).toISOString().split('T')[0] : ""}
+                            onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
+                            className="bg-gray-900 border-gray-700"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
                 <Button
                   type="submit"

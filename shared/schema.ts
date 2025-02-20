@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, jsonb, timestamp, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -11,24 +11,22 @@ export const users = pgTable("users", {
 export const startups = pgTable("startups", {
   id: serial("id").primaryKey(),
   submissionKey: text("submission_key").notNull().unique(),
-  name: text("name"),
-  industry: text("industry"),
-  foundingYear: integer("founding_year"),
+  organizationName: text("organization_name"),
+  industries: jsonb("industries").$type<string[]>(),
   location: text("location"),
-  employeeCount: integer("employee_count"),
-  teamDetails: jsonb("team_details").$type<any[]>(),
-  businessModel: text("business_model"),
-  problemStatement: text("problem_statement"),
-  revenueModel: text("revenue_model"),
-  traction: jsonb("traction").$type<Record<string, any>>(),
-  fundingHistory: jsonb("funding_history").$type<any[]>(),
-  financialProjections: jsonb("financial_projections").$type<Record<string, any>>(),
-  marketSize: text("market_size"),
-  competitorAnalysis: jsonb("competitor_analysis").$type<any[]>(),
-  uniqueSellingProposition: text("unique_selling_proposition"),
-  productOverview: text("product_overview"),
-  technologyStack: jsonb("technology_stack").$type<string[]>(),
-  intellectualProperty: jsonb("intellectual_property").$type<any[]>(),
+  fundingRounds: integer("funding_rounds"),
+  lastFunding: decimal("last_funding"),
+  lastFundingType: text("last_funding_type"),
+  equity: decimal("equity"),
+  totalFunding: decimal("total_funding"),
+  revenue: decimal("revenue"),
+  industryGroups: jsonb("industry_groups").$type<string[]>(),
+  foundersCount: integer("founders_count"),
+  employeesCount: integer("employees_count"),
+  topInvestors: jsonb("top_investors").$type<string[]>(),
+  growth: decimal("growth"),
+  valuation: decimal("valuation"),
+  lastValuationDate: timestamp("last_valuation_date"),
   aiAnalysis: jsonb("ai_analysis").$type<{
     scores: {
       marketPotential: number;
@@ -57,24 +55,22 @@ export const insertUserSchema = createInsertSchema(users).pick({
 });
 
 export const insertStartupSchema = createInsertSchema(startups).pick({
-  name: true,
-  industry: true,
-  foundingYear: true,
+  organizationName: true,
+  industries: true,
   location: true,
-  employeeCount: true,
-  teamDetails: true,
-  businessModel: true,
-  problemStatement: true,
-  revenueModel: true,
-  traction: true,
-  fundingHistory: true,
-  financialProjections: true,
-  marketSize: true,
-  competitorAnalysis: true,
-  uniqueSellingProposition: true,
-  productOverview: true,
-  technologyStack: true,
-  intellectualProperty: true,
+  fundingRounds: true,
+  lastFunding: true,
+  lastFundingType: true,
+  equity: true,
+  totalFunding: true,
+  revenue: true,
+  industryGroups: true,
+  foundersCount: true,
+  employeesCount: true,
+  topInvestors: true,
+  growth: true,
+  valuation: true,
+  lastValuationDate: true,
   aiAnalysis: true,
 });
 
