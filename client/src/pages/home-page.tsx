@@ -76,7 +76,7 @@ export default function HomePage() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {startups?.map((startup) => (
-              <Link key={startup.submissionKey} href={`/startup/${startup.submissionKey}`}>
+              <Link key={startup.submission_key} href={`/startup/${startup.submission_key}`}>
                 <Card className="bg-black/40 border-gray-800 hover:bg-black/60 hover:border-purple-500 cursor-pointer transition-all duration-300 backdrop-blur-sm group">
                   <CardHeader>
                     <CardTitle className="text-white flex items-center gap-2">
@@ -114,7 +114,7 @@ export default function HomePage() {
                         </div>
                       )}
                       <div className="text-gray-300">
-                        Created: {startup.createdAt ? new Date(startup.createdAt).toLocaleDateString() : "N/A"}
+                        Created: {startup.created_at ? new Date(startup.created_at).toLocaleDateString() : "N/A"}
                       </div>
                     </div>
                   </CardContent>

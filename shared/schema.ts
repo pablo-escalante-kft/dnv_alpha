@@ -7,13 +7,13 @@ export const users = pgTable("users", {
   id: text("id").primaryKey(), // UUID from Supabase Auth
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
+  created_at: timestamp("created_at").defaultNow(),
 });
 
-// Rest of the schema remains unchanged
+// Rest of the schema 
 export const startups = pgTable("startups", {
   id: serial("id").primaryKey(),
-  submissionKey: text("submission_key").notNull().unique(),
+  submission_key: text("submission_key").notNull().unique(),
   organizationName: text("organization_name"),
   url: text("url"),
   industries: jsonb("industries").$type<string[]>(),
@@ -78,7 +78,7 @@ export const startups = pgTable("startups", {
       trackRecord: number;
     };
   } | null>(),
-  createdAt: timestamp("created_at").defaultNow(),
+  created_at: timestamp("created_at").defaultNow(),
   status: text("status").default("pending"),
 });
 
@@ -89,8 +89,8 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export const insertStartupSchema = createInsertSchema(startups).omit({
   id: true,
-  createdAt: true,
-  submissionKey: true,
+  created_at: true,
+  submission_key: true,
   status: true,
 });
 
