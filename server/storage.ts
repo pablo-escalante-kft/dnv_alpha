@@ -1,87 +1,83 @@
-import { InsertUser, User, Startup, InsertStartup } from "@shared/schema";
+import { InsertUser, User, Startup, InsertStartup, users, startups } from "@shared/schema";
 import { nanoid } from "nanoid";
 import session from "express-session";
-import createMemoryStore from "memorystore";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
+import connectPg from "connect-pg-simple";
+import { pool } from "./db";
 
-const MemoryStore = createMemoryStore(session);
+const PostgresSessionStore = connectPg(session);
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
+
   createStartupSubmission(): Promise<string>;
   getStartupBySubmissionKey(key: string): Promise<Startup | undefined>;
   updateStartup(key: string, data: Partial<InsertStartup>): Promise<Startup>;
   getAllStartups(): Promise<Startup[]>;
-  
+
   sessionStore: session.Store;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private startups: Map<string, Startup>;
-  private currentId: number;
+export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
 
   constructor() {
-    this.users = new Map();
-    this.startups = new Map();
-    this.currentId = 1;
-    this.sessionStore = new MemoryStore({
-      checkPeriod: 86400000,
+    this.sessionStore = new PostgresSessionStore({
+      pool,
+      createTableIfMissing: true,
     });
   }
 
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
 
   async createStartupSubmission(): Promise<string> {
     const key = nanoid();
-    const startup: Startup = {
-      id: this.currentId++,
-      submissionKey: key,
-      status: "pending",
-      createdAt: new Date(),
-      aiAnalysis: null,
-    } as Startup;
-    
-    this.startups.set(key, startup);
-    return key;
+    const [startup] = await db
+      .insert(startups)
+      .values({
+        submissionKey: key,
+        status: "pending",
+      })
+      .returning();
+    return startup.submissionKey;
   }
 
   async getStartupBySubmissionKey(key: string): Promise<Startup | undefined> {
-    return this.startups.get(key);
+    const [startup] = await db
+      .select()
+      .from(startups)
+      .where(eq(startups.submissionKey, key));
+    return startup;
   }
 
   async updateStartup(key: string, data: Partial<InsertStartup>): Promise<Startup> {
-    const startup = await this.getStartupBySubmissionKey(key);
-    if (!startup) {
-      throw new Error("Startup not found");
-    }
-
-    const updated = { ...startup, ...data };
-    this.startups.set(key, updated);
-    return updated;
+    const [startup] = await db
+      .update(startups)
+      .set(data)
+      .where(eq(startups.submissionKey, key))
+      .returning();
+    return startup;
   }
 
   async getAllStartups(): Promise<Startup[]> {
-    return Array.from(this.startups.values());
+    return await db.select().from(startups);
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

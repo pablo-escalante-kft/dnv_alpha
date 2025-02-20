@@ -11,6 +11,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+const defaultFounder = {
+  name: "",
+  role: "",
+  linkedIn: "",
+  education: "",
+  experience: "",
+  previousCompanies: [] as string[],
+  achievements: [] as string[],
+};
+
 export default function StartupForm() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -404,10 +414,11 @@ export default function StartupForm() {
                               <CardContent className="pt-6 space-y-4">
                                 <Input
                                   placeholder="Name"
-                                  value={field.value?.[index]?.name || ""}
+                                  value={field.value?.[index]?.name ?? ""}
                                   onChange={(e) => {
                                     const newFounders = [...(field.value || [])];
                                     newFounders[index] = {
+                                      ...defaultFounder,
                                       ...(newFounders[index] || {}),
                                       name: e.target.value,
                                     };
@@ -417,10 +428,11 @@ export default function StartupForm() {
                                 />
                                 <Input
                                   placeholder="Role"
-                                  value={field.value?.[index]?.role || ""}
+                                  value={field.value?.[index]?.role ?? ""}
                                   onChange={(e) => {
                                     const newFounders = [...(field.value || [])];
                                     newFounders[index] = {
+                                      ...defaultFounder,
                                       ...(newFounders[index] || {}),
                                       role: e.target.value,
                                     };
@@ -430,10 +442,11 @@ export default function StartupForm() {
                                 />
                                 <Input
                                   placeholder="LinkedIn URL"
-                                  value={field.value?.[index]?.linkedIn || ""}
+                                  value={field.value?.[index]?.linkedIn ?? ""}
                                   onChange={(e) => {
                                     const newFounders = [...(field.value || [])];
                                     newFounders[index] = {
+                                      ...defaultFounder,
                                       ...(newFounders[index] || {}),
                                       linkedIn: e.target.value,
                                     };
@@ -443,10 +456,11 @@ export default function StartupForm() {
                                 />
                                 <Input
                                   placeholder="Education"
-                                  value={field.value?.[index]?.education || ""}
+                                  value={field.value?.[index]?.education ?? ""}
                                   onChange={(e) => {
                                     const newFounders = [...(field.value || [])];
                                     newFounders[index] = {
+                                      ...defaultFounder,
                                       ...(newFounders[index] || {}),
                                       education: e.target.value,
                                     };
@@ -456,10 +470,11 @@ export default function StartupForm() {
                                 />
                                 <Input
                                   placeholder="Experience"
-                                  value={field.value?.[index]?.experience || ""}
+                                  value={field.value?.[index]?.experience ?? ""}
                                   onChange={(e) => {
                                     const newFounders = [...(field.value || [])];
                                     newFounders[index] = {
+                                      ...defaultFounder,
                                       ...(newFounders[index] || {}),
                                       experience: e.target.value,
                                     };
@@ -469,10 +484,11 @@ export default function StartupForm() {
                                 />
                                 <Input
                                   placeholder="Previous Companies (comma-separated)"
-                                  value={field.value?.[index]?.previousCompanies?.join(", ") || ""}
+                                  value={field.value?.[index]?.previousCompanies?.join(", ") ?? ""}
                                   onChange={(e) => {
                                     const newFounders = [...(field.value || [])];
                                     newFounders[index] = {
+                                      ...defaultFounder,
                                       ...(newFounders[index] || {}),
                                       previousCompanies: e.target.value.split(", ").filter(Boolean),
                                     };
@@ -482,10 +498,11 @@ export default function StartupForm() {
                                 />
                                 <Input
                                   placeholder="Achievements (comma-separated)"
-                                  value={field.value?.[index]?.achievements?.join(", ") || ""}
+                                  value={field.value?.[index]?.achievements?.join(", ") ?? ""}
                                   onChange={(e) => {
                                     const newFounders = [...(field.value || [])];
                                     newFounders[index] = {
+                                      ...defaultFounder,
                                       ...(newFounders[index] || {}),
                                       achievements: e.target.value.split(", ").filter(Boolean),
                                     };
@@ -500,7 +517,7 @@ export default function StartupForm() {
                             type="button"
                             variant="outline"
                             onClick={() => {
-                              const newFounders = [...(field.value || []), {}];
+                              const newFounders = [...(field.value || []), defaultFounder];
                               field.onChange(newFounders);
                             }}
                             className="w-full"

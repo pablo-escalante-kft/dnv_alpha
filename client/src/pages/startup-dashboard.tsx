@@ -115,7 +115,11 @@ export default function StartupDashboard() {
                   <p className="text-gray-400">Industries: {startup.industries?.join(", ")}</p>
                   <p className="text-gray-400">Location: {startup.location}</p>
                   <p className="text-gray-400">
-                    Website: <a href={startup.url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">{startup.url}</a>
+                    Website: {startup.url && (
+                      <a href={startup.url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
+                        {startup.url}
+                      </a>
+                    )}
                   </p>
                 </div>
                 <div>
@@ -277,7 +281,7 @@ export default function StartupDashboard() {
                 <div className="h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
-                      data={startup.monthlyMetrics}
+                      data={startup.monthlyMetrics || []}
                       margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
